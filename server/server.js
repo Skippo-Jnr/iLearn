@@ -5,6 +5,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import { fileURLToPath } from "url";
 import errorHandler from "./middleware/errorHandler.js";
+import connectDB from "./config/db.js";
 
 // ES6 module _dirname alternative
 const _filename = fileURLToPath(import.meta.url);
@@ -12,6 +13,8 @@ const _dirname = path.dirname(_filename);
 
 const app = express();
 const port = process.env.PORT;
+
+connectDB();
 
 const allowOrigins = ["http://localhost:5173"];
 

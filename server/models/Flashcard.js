@@ -1,0 +1,38 @@
+import mongoose from "mongoose";
+
+const flashcardSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
+    documentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "document",
+      required: true,
+    },
+    cards: [
+      {
+        question: { type: String, required: true },
+        answer: { type: String, required: true },
+        difficulty: {
+          type: String,
+          enum: ["easy", "medium", "hard"],
+          default: "medium",
+        },
+        lastReviewd: { type: Date, default: null },
+        reviewCount: { type: Number, default: 0 },
+        isStarred: { type: Boolean, default: false },
+      },
+    ],
+  },
+  { timesatamps: true },
+);
+
+flashcardSchema.index({ userId: 1, documentId: 1 });
+
+const Flashcard =
+  mongoose.models.flashcard || mongoose.model("flashcard", flashcardSchema);
+
+export default Flashcard;
