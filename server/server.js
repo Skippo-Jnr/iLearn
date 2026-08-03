@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import { fileURLToPath } from "url";
 import errorHandler from "./middleware/errorHandler.js";
 import connectDB from "./config/db.js";
+import authRouter from "./routes/authRoutes.js";
 
 // ES6 module _dirname alternative
 const _filename = fileURLToPath(import.meta.url);
@@ -16,7 +17,7 @@ const port = process.env.PORT;
 
 connectDB();
 
-const allowOrigins = ["http://localhost:5173"];
+const allowedOrigins = ["http://localhost:5173"];
 
 app.use(
   cors({
@@ -39,8 +40,11 @@ app.use(express.urlencoded({ extended: true }));
 // Static folder for uploads
 app.use("/uploads", express.static(path.join(_dirname, "uploads")));
 
+// API Endpoints
+app.get("/", (req, res) => res.send("API is working"));
+
 // Routes
-app.use(errorHandler);
+app.use("/api/auth", authRouter);
 
 app.use((req, res) => {
   res.status(404).json({
@@ -50,8 +54,7 @@ app.use((req, res) => {
   });
 });
 
-// API Endpoints
-app.get("/", (req, res) => res.send("API is working"));
+app.use(errorHandler);
 
 // start server
 app.listen(port, () => console.log(`Server started on http:localhost:${port}`));

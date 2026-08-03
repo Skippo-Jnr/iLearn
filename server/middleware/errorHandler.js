@@ -3,7 +3,7 @@ const errorHandler = (err, req, res, next) => {
   let message = err.message || "Server Error";
 
   // Mongoose bad ObjectId
-  if (err.code === "CastError") {
+  if (err.name === "CastError") {
     message = "Resource not found";
     statusCode = 404;
   }
@@ -11,13 +11,13 @@ const errorHandler = (err, req, res, next) => {
   // mongoose duplicate key
   if (err.code === 11000) {
     const field = Object.keys(err.keyValue)[0];
-    message: `${field} already exists`;
+    message = `${field} already exists`;
     statusCode = 404;
   }
 
   // mongoose validation error
-  if (err.code === "ValidationError") {
-    message: Object.values(err.errors)
+  if (err.name === "ValidationError") {
+    message = Object.values(err.errors)
       .map((val) => val.message)
       .join(", ");
     statusCode = 400;
@@ -25,18 +25,18 @@ const errorHandler = (err, req, res, next) => {
 
   // Multer file size error
   if (err.code === "LIMIT_FILE_SIZE") {
-    message: "File size exceeds the maximum limit of 10MB";
+    message = "File size exceeds the maximum limit of 10MB";
     statusCode = 400;
   }
 
   // JWT errors
-  if (err.code === "JsonWebTokenError") {
-    message: "Invalid token";
+  if (err.name === "JsonWebTokenError") {
+    message = "Invalid token";
     statusCode = 401;
   }
 
-  if (err.code === "TokenExpiredError") {
-    message: "Token expired";
+  if (err.name === "TokenExpiredError") {
+    message = "Token expired";
     statusCode = 401;
   }
 
@@ -49,7 +49,7 @@ const errorHandler = (err, req, res, next) => {
     success: false,
     error: message,
     statusCode,
-    ...err(process.env.NODE_ENV === "development" && { stack: err.stack }),
+    ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
   });
 };
 
