@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import errorHandler from "./middleware/errorHandler.js";
 import connectDB from "./config/db.js";
 import authRouter from "./routes/authRoutes.js";
+import documentRouter from "./routes/documentRoutes.js";
 
 // ES6 module _dirname alternative
 const _filename = fileURLToPath(import.meta.url);
@@ -45,6 +46,7 @@ app.get("/", (req, res) => res.send("API is working"));
 
 // Routes
 app.use("/api/auth", authRouter);
+app.use("/api/documents", documentRouter);
 
 app.use((req, res) => {
   res.status(404).json({

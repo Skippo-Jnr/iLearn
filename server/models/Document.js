@@ -12,10 +12,10 @@ const documentSchema = new mongoose.Schema(
       required: [true, "Please provide a document title"],
       trim: true,
     },
-    fileName: { typr: String, required: true },
+    fileName: { type: String, required: true },
     filePath: { type: String, required: true },
     fileSize: { type: Number, required: true },
-    extractedText: { trype: String, default: "" },
+    extractedText: { type: String, default: "" },
     chunks: [
       {
         content: { type: String, required: true },
