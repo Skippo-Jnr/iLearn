@@ -21,13 +21,13 @@ const flashcardSchema = new mongoose.Schema(
           enum: ["easy", "medium", "hard"],
           default: "medium",
         },
-        lastReviewd: { type: Date, default: null },
+        lastReviewed: { type: Date, default: null },
         reviewCount: { type: Number, default: 0 },
         isStarred: { type: Boolean, default: false },
       },
     ],
   },
-  { timesatamps: true },
+  { timestamps: true },
 );
 
 flashcardSchema.index({ userId: 1, documentId: 1 });

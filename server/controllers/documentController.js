@@ -180,6 +180,8 @@ export const getDocument = async (req, res, next) => {
     documentData.flashcardCount = flashcardCount;
     documentData.quizCount = quizCount;
 
+    // Calling .toObject() converts it into a standard, plain JavaScript object so you can freely add new custom properties like flashcardCount and quizCount to it.
+
     res.status(200).json({ success: true, data: documentData });
   } catch (error) {
     next(error);
