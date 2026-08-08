@@ -9,6 +9,7 @@ import connectDB from "./config/db.js";
 import authRouter from "./routes/authRoutes.js";
 import documentRouter from "./routes/documentRoutes.js";
 import flashcardRouter from "./routes/flashcardRoutes.js";
+import aiRouter from "./routes/aiRoutes.js";
 
 // ES6 module _dirname alternative
 const _filename = fileURLToPath(import.meta.url);
@@ -49,6 +50,7 @@ app.get("/", (req, res) => res.send("API is working"));
 app.use("/api/auth", authRouter);
 app.use("/api/documents", documentRouter);
 app.use("/api/flashcards", flashcardRouter);
+app.use("/api/ai", aiRouter);
 
 app.use((req, res) => {
   res.status(404).json({

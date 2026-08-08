@@ -17,7 +17,7 @@ const quizSchema = new mongoose.Schema(
       {
         question: { type: String, required: true },
         options: {
-          type: String,
+          type: [String],
           required: true,
           validate: [
             (array) => array.length === 4,

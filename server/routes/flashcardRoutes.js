@@ -13,7 +13,7 @@ const flashcardRouter = express.Router();
 flashcardRouter.use(protect);
 
 flashcardRouter.get("/", getAllFlashcardSets);
-flashcardRouter.get("/:docuemnt", getFlashcards);
+flashcardRouter.get("/:documentId", getFlashcards);
 flashcardRouter.post("/:cardId/review", reviewFlashcard);
 flashcardRouter.put("/:cardId/star", toggleStarFlashcard);
 flashcardRouter.delete("/:id", deleteFlashcardSet);
