@@ -11,6 +11,7 @@ import documentRouter from "./routes/documentRoutes.js";
 import flashcardRouter from "./routes/flashcardRoutes.js";
 import aiRouter from "./routes/aiRoutes.js";
 import quizRouter from "./routes/quizRoutes.js";
+import progressRouter from "./routes/progressRoutes.js";
 
 // ES6 module _dirname alternative
 const _filename = fileURLToPath(import.meta.url);
@@ -53,6 +54,7 @@ app.use("/api/documents", documentRouter);
 app.use("/api/flashcards", flashcardRouter);
 app.use("/api/ai", aiRouter);
 app.use("/api/quizzes", quizRouter);
+app.use("/api/progress", progressRouter);
 
 app.use((req, res) => {
   res.status(404).json({
