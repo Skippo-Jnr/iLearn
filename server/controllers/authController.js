@@ -116,7 +116,7 @@ export const getProfile = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: {
+      userData: {
         id: user._id,
         username: user.username,
         email: user.email,
@@ -182,7 +182,7 @@ export const updateProfile = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: {
+      userData: {
         id: updatedUser._id,
         username: updatedUser.username,
         email: updatedUser.email,
@@ -190,6 +190,29 @@ export const updateProfile = async (req, res, next) => {
       },
       message: "Profile updated successfully",
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const isAuth = async (req, res, next) => {
+  try {
+    return res.json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const logout = async (req, res, next) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    return res.json({ success: true, message: "Logged out" });
   } catch (error) {
     next(error);
   }

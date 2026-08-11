@@ -12,10 +12,11 @@ import FlashcardsPage from "./pages/Flashcards/Flashcards";
 import QuizTake from "./pages/Quizzes/QuizTake";
 import QuizResult from "./pages/Quizzes/QuizResult";
 import Profile from "./pages/Profile/Profile";
+import { Toaster } from "react-hot-toast";
+import { useAuth } from "./context/AuthContext";
 
 function App() {
-  const isAuthenticated = false;
-  const loading = false;
+  const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
     return (
@@ -59,6 +60,8 @@ function App() {
 
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+
+      <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
     </div>
   );
 }

@@ -3,7 +3,9 @@ import { body } from "express-validator";
 import {
   changePassword,
   getProfile,
+  isAuth,
   login,
+  logout,
   register,
   updateProfile,
 } from "../controllers/authController.js";
@@ -36,10 +38,12 @@ const loginValidation = [
 // Public routes
 authRouter.post("/register", registerValidation, register);
 authRouter.post("/login", loginValidation, login);
+authRouter.post("/logout", logout);
 
 // protected routes
 authRouter.get("/profile", protect, getProfile);
 authRouter.put("/profile", protect, updateProfile);
 authRouter.post("/change-password", protect, changePassword);
+authRouter.get("/is-auth", protect, isAuth);
 
 export default authRouter;
