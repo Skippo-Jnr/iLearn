@@ -1,5 +1,7 @@
 import express from "express";
 import { body } from "express-validator";
+import { validate } from "../middleware/validate.js";
+import { protect } from "../middleware/auth.js";
 import {
   changePassword,
   getProfile,
@@ -9,10 +11,10 @@ import {
   register,
   updateProfile,
 } from "../controllers/authController.js";
-import { protect } from "../middleware/auth.js";
 
 const authRouter = express.Router();
 
+// Validation Rules
 const registerValidation = [
   body("username")
     .trim()
@@ -35,12 +37,12 @@ const loginValidation = [
   body("password").notEmpty().withMessage("Password is required"),
 ];
 
-// Public routes
-authRouter.post("/register", registerValidation, register);
-authRouter.post("/login", loginValidation, login);
+// Public Routes
+authRouter.post("/register", registerValidation, validate, register);
+authRouter.post("/login", loginValidation, validate, login);
 authRouter.post("/logout", logout);
 
-// protected routes
+// Protected Routes
 authRouter.get("/profile", protect, getProfile);
 authRouter.put("/profile", protect, updateProfile);
 authRouter.post("/change-password", protect, changePassword);
