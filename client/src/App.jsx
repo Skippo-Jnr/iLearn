@@ -14,6 +14,7 @@ import QuizResult from "./pages/Quizzes/QuizResult";
 import Profile from "./pages/Profile/Profile";
 import { Toaster } from "react-hot-toast";
 import { useAuth } from "./context/AuthContext";
+import PublicRoutes from "./components/auth/PublicRoutes";
 
 function App() {
   const { isAuthenticated, loading } = useAuth();
@@ -39,9 +40,10 @@ function App() {
             )
           }
         />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
+        <Route element={<PublicRoutes />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Route>
 
         {/* Protected Routes */}
         <Route element={<ProtectedRoute />}>

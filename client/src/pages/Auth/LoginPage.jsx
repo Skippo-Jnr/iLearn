@@ -56,7 +56,7 @@ function LoginPage() {
         setUser(data.user);
         setIsAuthenticated(true);
         toast.success("Logged in successfully");
-        navigate("/dashboard");
+        navigate("/dashboard", { replace: true });
       }
     } catch (error) {
       // if (error.response) {
