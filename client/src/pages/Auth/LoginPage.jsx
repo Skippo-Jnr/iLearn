@@ -4,53 +4,83 @@ import { useAuth } from "../../context/AuthContext";
 import axiosInstance from "../../utils/axiosInstance";
 import { API_PATHS } from "../../utils/apiPaths";
 import toast from "react-hot-toast";
-import { ArrowRight, BrainCircuit, Lock, Mail } from "lucide-react";
+import {
+  ArrowRight,
+  BrainCircuit,
+  Eye,
+  EyeOff,
+  Lock,
+  Mail,
+} from "lucide-react";
+import { validateForm } from "../../utils/validation";
 
 function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({
+    email: "",
+    password: "",
+  });
+  const [touched, setTouched] = useState({
+    email: false,
+    password: false,
+  });
   const navigate = useNavigate();
   const { setUser, setIsAuthenticated } = useAuth();
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setError("");
-  //   setLoading(true);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    const updatedForm = { ...formData, [name]: value };
+    setFormData(updatedForm);
 
-  //   try {
-  //     const { data } = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
-  //       email,
-  //       password,
-  //     });
+    // real-time validation
+    if (touched[name]) {
+      const errors = validateForm(updatedForm);
+      setFieldErrors((prev) => ({ ...prev, [name]: errors[name] || "" }));
+    }
 
-  //     if (data.success) {
-  //       setUser(data.user);
-  //       setIsAuthenticated(true);
-  //       toast.success("Logged in successfully");
-  //       navigate("/dashboard");
-  //     }
-  //   } catch (error) {
-  //     console.error(error?.response?.data?.error);
-  //     setError(error?.response?.data?.error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+    if (error) setError("");
+  };
+
+  const handleBlur = (e) => {
+    const { name } = e.target;
+
+    setFocusedField(null);
+
+    // mark field as touched
+    setTouched((prev) => ({
+      ...prev,
+      [name]: true,
+    }));
+
+    // validate blurred field
+    const errors = validateForm(formData);
+    setFieldErrors((prev) => ({ ...prev, [name]: errors[name] || "" }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+
+    const errors = validateForm(formData);
+    const hasErrors = Object.keys(errors).length > 0;
+
+    if (hasErrors) {
+      setFieldErrors(errors);
+      setTouched({ email: true, password: true });
+      return;
+    }
+
     setLoading(true);
+    setError("");
 
     try {
-      const { data } = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
-        email,
-        password,
-      });
+      const { data } = await axiosInstance.post(API_PATHS.AUTH.LOGIN, formData);
 
       if (data.success) {
         setUser(data.user);
@@ -59,22 +89,6 @@ function LoginPage() {
         navigate("/dashboard", { replace: true });
       }
     } catch (error) {
-      // if (error.response) {
-      //   const serverMsg =
-      //     error?.response?.data?.error || "Login failed. Please try again. ";
-      //   console.error(serverMsg);
-      //   setError(serverMsg);
-      // } else if (error.request) {
-      //   const offlineMsg =
-      //     "Unable to connect. Please check connection or try again later. ";
-      //   console.error(offlineMsg);
-      //   setError(offlineMsg);
-      // } else {
-      //   const fallbackMsg = "Something went wrong. Please try again. ";
-      //   console.error(fallbackMsg);
-      //   setError(fallbackMsg);
-      // }
-
       const msg =
         error.response?.data?.error ||
         "Unable to connect. Please check your connection.";
@@ -104,7 +118,7 @@ function LoginPage() {
           </div>
 
           {/* form */}
-          <div className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5" noValidate>
             {/* Email Field */}
             <div className="space-y-2">
               <label
@@ -121,14 +135,20 @@ function LoginPage() {
                 </div>
                 <input
                   type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
                   onFocus={() => setFocusedField("email")}
-                  onBlur={() => setFocusedField(null)}
+                  onBlur={handleBlur}
                   className="w-full h-12 pl-12 pr-4 border-2 border-slate-200 rounded-xl bg-slate-50/50 text-slate-900 placeholder-slate-400 text-sm font-medium transition-all duration-200 focus:outline-none focus:border-emerald-500 focus:bg-white focus:shadow-lg focus:shadow-emerald-500/10"
                   placeholder="you@example.com"
                 />
               </div>
+              {fieldErrors.email && (
+                <p className="text-xs text-red-500 font-medium pl-1">
+                  {fieldErrors.email}
+                </p>
+              )}
             </div>
 
             {/* Password Field */}
@@ -146,15 +166,32 @@ function LoginPage() {
                   <Lock className="w-5 h-5" strokeWidth={2} />
                 </div>
                 <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={handleInputChange}
                   onFocus={() => setFocusedField("password")}
-                  onBlur={() => setFocusedField(null)}
+                  onBlur={handleBlur}
                   className="w-full h-12 pl-12 pr-4 border-2 border-slate-200 rounded-xl bg-slate-50/50 text-slate-900 placeholder-slate-400 text-sm font-medium transition-all duration-200 focus:outline-none focus:border-emerald-500 focus:bg-white focus:shadow-lg focus:shadow-emerald-500/10"
                   placeholder="**********"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
               </div>
+              {fieldErrors.password && (
+                <p className="text-xs text-red-500 font-medium pl-1">
+                  {fieldErrors.password}
+                </p>
+              )}
             </div>
 
             {/* Error Message */}
@@ -168,7 +205,6 @@ function LoginPage() {
 
             {/* Submit Button */}
             <button
-              onClick={handleSubmit}
               disabled={loading}
               className="group relative w-full h-12 bg-linear-to-r from-emerald-500 to-teal-500 hover:from-emerald-500 hover:to-teal-600 active:scale-[0.98] text-white text-sm font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-emerald-500/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 shadow-lg shadow-emerald-500/25 overflow-hidden cursor-pointer"
             >
@@ -190,7 +226,7 @@ function LoginPage() {
               </span>
               <div className="absolute inset-0 bg-linear-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
             </button>
-          </div>
+          </form>
 
           {/* Footer */}
           <div className="mt-8 pt-8 border-t border-slate-200/60">
