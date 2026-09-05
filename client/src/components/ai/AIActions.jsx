@@ -25,7 +25,6 @@ function AIActions() {
         setModalTitle("Generated Summary");
         setModalContent(data.data.summary);
         setIsModalOpen(true);
-        console.log(modalContent);
       }
     } catch (error) {
       toast.error("Failed to generate summary");
@@ -81,7 +80,7 @@ function AIActions() {
         <div className="p-6 space-y-6">
           {/* generate Summary */}
           <div className="group p-5 bg-linear-to-br from-slate-50/50 to-white rounded-xl border border-slate-200/60 hover:border-slate-300/60 hover:shadow-md transition-all duration-200">
-            <div className="flex items-start justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-start items-start justify-between gap-4">
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-2">
                   <div className="w-8 h-8 rounded-lg bg-linear-to-br from-blue-100 to-cyan-100 flex items-center justify-center">
@@ -101,12 +100,12 @@ function AIActions() {
               <button
                 onClick={handleGenerateSummary}
                 disabled={loadingActions === "summary"}
-                className="shrink-0 h-10 px-5 bg-linear-to-r from-teal-300 to-teal-600 hover:from-teal-500 hover:to-teal-600 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 cursor-pointer"
+                className="w-full sm:w-auto shrink-0 h-10 px-5 bg-linear-to-r from-teal-300 to-teal-600 hover:from-teal-500 hover:to-teal-600 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 cursor-pointer"
               >
                 {loadingActions === "summary" ? (
                   <span className="flex items-center gap-2">
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Loading...
+                    Generating...
                   </span>
                 ) : (
                   "Summarize"
@@ -129,23 +128,24 @@ function AIActions() {
                   Explain a Concept
                 </h4>
               </div>
-              <p className="text-sm text-slate-600 leading-relaxed">
+              <p className="text-sm text-slate-600 leading-relaxed mb-4">
                 Enter a topic or concept from the document to get a detailed
                 explanation.
               </p>
-              <div className="flex items-center gap-3">
+              <div className="flex flex-col sm:flex-row items-center gap-3">
                 <input
                   type="text"
                   value={concept}
                   onChange={(e) => setConcept(e.target.value)}
                   placeholder='e.g., "React Hooks"'
-                  className="flex-1 h-11 px-4 border-2 border-slate-200 rounded-xl bg-slate-/ text-slate-900 placeholder-slate-400 text-sm font-medium transition-all duration-200 focus:outline-none focus:border-emerald-500 focus:bg-white focus:shadow-lg focus:shadow-purple-500/10"
+                  className="w-full flex-1 h-11 px-4 border-2 border-slate-200 rounded-xl bg-slate-100 text-slate-900 placeholder-slate-400 text-sm font-medium transition-all duration-200 focus:outline-none focus:border-emerald-500 focus:bg-white focus:shadow-lg focus:shadow-purple-500/10 min-h-[44px]"
                   disabled={loadingActions === "explain"}
                 />
                 <button
                   type="submit"
                   disabled={loadingActions === "explain" || !concept.trim()}
-                  className="shrink-0 h-11 px-5 bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-600 hover:to-emerald-600 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-purple-500/25 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 cursor-pointer"
+                  // className="shrink-0 h-11 px-5 bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-600 hover:to-emerald-600 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-purple-500/25 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 cursor-pointer"
+                  className="w-full sm:w-auto h-11 min-h-[44px] px-5 bg-linear-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-emerald-500/20 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 cursor-pointer flex items-center justify-center shrink-0"
                 >
                   {loadingActions === "explain" ? (
                     <span className="flex items-center gap-2">
