@@ -64,8 +64,8 @@ const toggleStar = async (cardId) => {
 
 const deleteFlashcardSet = async (id) => {
   try {
-    const { data } = await axiosInstance.put(
-      API_PATHS.FLASHCARDS.DELETE_FLASHCARD_SET(cardId),
+    const { data } = await axiosInstance.delete(
+      API_PATHS.FLASHCARDS.DELETE_FLASHCARD_SET(id),
     );
     return data;
   } catch (error) {
