@@ -130,7 +130,7 @@ export const getQuizResults = async (req, res, next) => {
     const quiz = await Quiz.findOne({
       _id: req.params.id,
       userId: req.user._id,
-    });
+    }).populate("documentId", "title fileName");
 
     if (!quiz)
       return res
