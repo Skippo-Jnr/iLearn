@@ -57,7 +57,7 @@ function Profile() {
       setNewPassword("");
       setConfirmNewPassword("");
     } catch (error) {
-      toast.error("Failed to change password.");
+      // toast.error("Failed to change password.");
       console.error(error);
     } finally {
       setPasswordLoading(false);
